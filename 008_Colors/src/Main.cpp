@@ -2,7 +2,6 @@
 // ALWAYS LOAD GLAD FIRST
 #include <glad/glad.h>
 
-#include <boost/dll/runtime_symbol_info.hpp>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
@@ -20,8 +19,7 @@
 
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include "Geometry.h"
-#include "Box.h"
+#include "Mesh.h"
 #include "Camera.h"
 
 
