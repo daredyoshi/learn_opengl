@@ -20,7 +20,6 @@
 
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include "Geometry.h"
 #include "Box.h"
 #include "Camera.h"
 
@@ -97,110 +96,52 @@ int main(int numArgs, char *args[])
 
 
 
-    // These coordinates in NDC space will make up the rectabnel that we
-    // want to render
-    glm::vec4 cubePositions[] = {
-        glm::vec4( 0.0f,  0.0f,  0.0f , 1.0f), 
-        glm::vec4( 2.0f,  5.0f, -15.0f, 1.0f), 
-        glm::vec4(-1.5f, -2.2f, -2.5f , 1.0f),  
-        glm::vec4(-3.8f, -2.0f, -12.3f, 1.0f),  
-        glm::vec4( 2.4f, -0.4f, -3.5f , 1.0f),  
-        glm::vec4(-1.7f,  3.0f, -7.5f , 1.0f),  
-        glm::vec4( 1.3f, -2.0f, -2.5f , 1.0f),  
-        glm::vec4( 1.5f,  2.0f, -2.5f , 1.0f), 
-        glm::vec4( 1.5f,  0.2f, -1.5f , 1.0f), 
-        glm::vec4(-1.3f,  1.0f, -1.5f , 1.0f)  
-    }; 
     glm::vec3 lightPos{1.2f, 1.0f, 2.0f};
 
 
-    std::array<float, 36*3> vertices {{
-        -0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-        -0.5f,  0.5f, -0.5f,  
-        -0.5f, -0.5f, -0.5f,  
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f,  
-        -0.5f, -0.5f,  0.5f,  
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f, -0.5f,  
-        -0.5f, -0.5f, -0.5f,  
-        -0.5f, -0.5f, -0.5f,  
-        -0.5f, -0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f,  
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f, -0.5f,  0.5f,  
-        -0.5f, -0.5f,  0.5f,  
-        -0.5f, -0.5f, -0.5f,  
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f, -0.5f,  
-    } };
-
-    std::array<float, 36*2> uvs{{
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f
-    }};
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
 
     glEnable(GL_DEPTH_TEST);
 
@@ -236,8 +177,33 @@ int main(int numArgs, char *args[])
     std::string happyTexturePath = (CWD + '/' + HAPPY_TEXTURE);
     Texture happyTexture{ happyTexturePath };
 
-    Geometry<36> happyBox(geometryShader, vertices, uvs, std::vector<Texture>{{brickTexture, happyTexturePath}}); 
-    
+    unsigned int VBO, cubeVAO;
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &VBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(cubeVAO);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // texture coord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
+
+    // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
     
     glm::mat4 lightModel {1.0f};
 
@@ -296,38 +262,42 @@ int main(int numArgs, char *args[])
         // GL_DEPTH_BUFFER_BIT and GL_STENCIL_BUFFER_BIT
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-        // glm::vec3 camX = glm::normalize(glm::cross(up, camZ));
-        // now get the up vector by crossing the x and z
-        // glm::vec3 camY = glm::normalize(glm::cross(camZ, camX));
-        
-
-        // the above is equivalent to 
-        geometryShader.use();
-        geometryShader.setMatrix("view", cam.getViewMatrix()); 
-        geometryShader.setMatrix("projection", cam.getProjectionMatrix());
-        geometryShader.setVec3("objectColor", OBJECT_COLOR);
-        geometryShader.setVec3("lightColor", LIGHT_COLOR);
-        // We can now activate the program object
-        // From now one every shader and rendering call will use this program object
-
-        // Usually when you have multiple objects, you first generate/configure all the 
-        // VAOs ( and the required VBO and attribute pointers ) and store those for later use.
-        // Once we want to draw one of our objects, we take the corresponding VAO, bind it, and 
-        // then draw the object and unbind the VAO again
-
-
-        for (unsigned int i{0}; i<10; ++i){
-            model[3] = cubePositions[i];
-            geometryShader.setMatrix("model", model);
-            happyBox.draw();
-        }
-
+        // be sure to activate shader when setting uniforms/drawing objects
         lightShader.use();
-        lightShader.setMatrix("view", cam.getViewMatrix());
-        lightShader.setMatrix("projection", cam.getProjectionMatrix());
-        lightShader.setVec3("lightColor", LIGHT_COLOR);
-        // lightBox.draw();
+        lightShader.setVec3("objectColor", glm::vec3{ 1.0f, 0.5f, 0.31f } );
+        lightShader.setVec3("lightColor",  glm::vec3 { 1.0f, 1.0f, 1.0f } );
+
+        // view/projection transformations
+        projection = cam.getProjectionMatrix();
+        view = cam.getViewMatrix();
+        lightShader.setMatrix("projection", projection);
+        lightShader.setMatrix("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        lightShader.setMatrix("model", model);
+
+        // render the cube
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // bind textures on corresponding texture units
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, brickTexture);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, happyTexture);
+
+        // also draw the lamp object
+        geometryShader.use();
+        geometryShader.setMatrix("projection", projection);
+        geometryShader.setMatrix("view", view);
+        // world transformation
+        model = glm::mat4(1.0f);
+        geometryShader.setMatrix("model", model);
+
+        // render the light
+        glBindVertexArray(cubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         
 
         // this will swap the color buffer that is used to render 

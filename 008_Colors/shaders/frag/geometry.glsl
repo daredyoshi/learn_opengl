@@ -19,6 +19,6 @@ void main()
     }
     /* newUv *= scale; */
     vec4 diffuse = mix(texture(texture1, Uv), texture(texture2, newUv), opacity);
-    /* FragColor = diffuse * vec4(lightColor, 1.0); */
+    FragColor = diffuse * vec4(lightColor, 1.0);
     FragColor = diffuse;
 }
