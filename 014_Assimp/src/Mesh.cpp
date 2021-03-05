@@ -23,17 +23,15 @@ void Mesh::init(){
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
     // vertex uvs
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Uv));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Uv));
 
     glBindVertexArray(0);
 }
 
 void Mesh::draw(ShaderProgram& shader) const {
-    glUseProgram(shader);
     m_mat.setShaderMaterial(shader);
     m_mat.setShaderTextures();
     glBindVertexArray(m_VAO);
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    glUseProgram(0);
 }

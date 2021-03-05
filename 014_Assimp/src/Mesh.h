@@ -22,7 +22,7 @@ private:
     unsigned int m_EBO;
     std::vector<Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
-    Material& m_mat;
+    Material m_mat;
     void init();
 
 public:
@@ -30,7 +30,7 @@ public:
     Mesh(
             std::vector<Vertex> vertices, 
             std::vector<unsigned int> indices, 
-            Material& mat
+            Material mat
         ) :
             m_vertices{vertices},
             m_indices{indices},

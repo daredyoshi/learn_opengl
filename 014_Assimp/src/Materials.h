@@ -46,29 +46,18 @@ public:
     void setSpecularTex(const Texture tex){ m_specularTex = tex; }
 
     // this assumes the shader has a matching material struct
-    void setShaderMaterial(const ShaderProgram& shader){
-
-
-        // FOR SOME REASON NON OF THESE WORK BUT SEGFAULT
-        //
-        // Running through the debugger it's not the first call
-        // but the second loop where it segfaults
-        //
-        // shader.setVec3(m_name + ".ambient", m_ambient);
-        // shader.setVec3(m_name + ".diffuse", m_diffuse);
-        // shader.setVec3(m_name + ".specular", m_specular);
-        // shader.setFloat(m_name + ".shininess", m_shininess);
-        // shader.setInt(m_name + ".diffuseTex1", 0);
-        // shader.setInt(m_name + ".diffuseTex2", 1);
-        // shader.setInt(m_name + ".diffuseTex3", 2);
-        // shader.setInt(m_name + ".specularTex", 3);
-        //
-        // The following does not segfault. 
-        //
-        shader.setVec3("material.ambient", m_ambient);
+    void setShaderMaterial(const ShaderProgram& shader) const {
+        shader.setVec3(m_name + ".ambient", m_ambient);
+        shader.setVec3(m_name + ".diffuse", m_diffuse);
+        shader.setVec3(m_name + ".specular", m_specular);
+        shader.setFloat(m_name + ".shininess", m_shininess);
+        shader.setInt(m_name + ".diffuseTex1", 0);
+        shader.setInt(m_name + ".diffuseTex2", 1);
+        shader.setInt(m_name + ".diffuseTex3", 2);
+        shader.setInt(m_name + ".specularTex", 3);
 
     }
-    void setShaderTextures(){
+    void setShaderTextures() const {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_diffuseTex1);
         glActiveTexture(GL_TEXTURE1);
@@ -79,6 +68,18 @@ public:
         glBindTexture(GL_TEXTURE_2D, m_specularTex);
     }
 };
+
+class DefaultMaterial: public Material{
+public:
+    DefaultMaterial(const std::string name) : Material(
+            name,
+            glm::vec3{1.0, 1.0, 1.0},
+            glm::vec3{1.0, 1.0, 1.0},
+            glm::vec3{1.0, 1.0, 1.0},
+            32.0f
+            ) {}
+};
+
 
 
 class EmeraldMaterial : public Material{

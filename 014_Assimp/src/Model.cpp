@@ -39,7 +39,7 @@ Mesh Model::processMesh(const aiMesh *mesh, const aiScene *scene){
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     // this would be replaces with a default material
-    ObsidianMaterial mat{"material"};
+    DefaultMaterial mat{"material"};
 
     for(unsigned int i{0}; i < mesh->mNumVertices; i++){
         Vertex vertex;
@@ -55,12 +55,13 @@ Mesh Model::processMesh(const aiMesh *mesh, const aiScene *scene){
         vector.x = mesh->mNormals[i].x;
         vector.y = mesh->mNormals[i].y;
         vector.z = mesh->mNormals[i].z;
+        vertex.Normal = vector;
 
         // get the uv
         if(mesh->mTextureCoords[0]){
             // up to 8 different uv sets are allowed
             // but we will only take the first one
-            glm::vec3 vec;
+            glm::vec2 vec;
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
             vertex.Uv = vec;

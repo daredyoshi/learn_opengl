@@ -100,11 +100,11 @@ int main(int numArgs, char *args[])
     SpotLight spotLight {
         "spotLight",
         // ambient
-        glm::vec3{0.7},
+        glm::vec3{0.2},
         // diffuseCan be 0, in which case the mBones array is NULL.
-        glm::vec3{1.0},
+        glm::vec3{0.8},
         // spec
-        glm::vec3{ 2.0},
+        glm::vec3{ 1.0},
         // position 
         glm::vec3{ 2.0, 1.0, 1.0}, 
         // direction
@@ -122,16 +122,16 @@ int main(int numArgs, char *args[])
     DirectionalLight directionalLight { 
         "directionLight",
         // ambient
-        glm::vec3{0.0},
+        glm::vec3{0.2},
         // diffuse
-        glm::vec3{0.0},
+        glm::vec3{0.2},
         // spec
         glm::vec3{ 0.0},
         //direction
         glm::normalize(glm::vec3{ 0.0, -0.8, -0.2 })
     };
 
-    glm::vec4 cubePositions[] = {
+    glm::vec4 objectPositions[] = {
         glm::vec4( 0.0f,  0.0f,  0.0f , 1.0f), 
         glm::vec4( 2.0f,  5.0f, -15.0f, 1.0f), 
         glm::vec4(-1.5f, -2.2f, -2.5f , 1.0f),  
@@ -161,11 +161,11 @@ int main(int numArgs, char *args[])
                     // name
                     "pointLights[" + std::to_string(count) + ']',
                     // ambient
-                    glm::vec3{0.5},
+                    glm::vec3{0.1},
                     // diffuse
-                    glm::vec3{0.6},
+                    glm::vec3{0.5},
                     // spec
-                    glm::vec3{ 1.0},
+                    glm::vec3{ 0.5},
                     // position 
                     pointPos, 
                     // linear
@@ -189,6 +189,7 @@ int main(int numArgs, char *args[])
     double textureOpacity{ 1.0f };
     // this will be the transform of object
     glm::mat4 model = glm::mat4(1.0f);
+    model = glm::scale(glm::vec3(0.3f));
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
 
     glm::mat4 view { cam.getViewMatrix() };
@@ -321,25 +322,30 @@ int main(int numArgs, char *args[])
         spotLight.setDirection(cam.getDir());
         spotLight.setShaderMaterial(geometryShader);
 
-        (void)cubePositions;
-        // float rotAmount = 0.01f * deltaTime;
-        // for (unsigned int i{0}; i<10; ++i){
-        //     model[3] = cubePositions[i];
-        //     
-        //     model = glm::rotate(model, rotAmount*float(i), glm::vec3(0.2f, 0.2f, 0.6f));
-        //     
-        //
-        //     geometryShader.setMatrix("model", model);
-        //
-        //     // this could also be calculated on the shader, but that would be slower
-        //     // since it would be done for each vertex and we only need to do it
-        //     // once here
-        //     glm::mat3 normalMatrix{glm::mat3(glm::transpose(glm::inverse(model)))};
-        //     geometryShader.setMatrix3("normalMatrix", normalMatrix);
-        //
-        // }
+        float rotAmount = 0.01f * deltaTime;
+        for (unsigned int i{0}; i<10; ++i){
 
-        obj.draw(geometryShader);
+            model = glm::rotate(model, rotAmount*float(i), glm::vec3(0.2f, 0.2f, 0.6f));
+            model[3] = objectPositions[i];
+           
+            // std::cout << "model matrix is : ";
+            // for (unsigned int x{0}; x< 4; ++x){
+            //     for(unsigned int y{0}; y < 3; ++y){
+            //          std::cout << ( model[x][y] ) << ',';
+            //     }
+            // }
+            // std::cout << '\n';
+            geometryShader.setMatrix("model", model);
+
+            // this could also be calculated on the shader, but that would be slower
+            // since it would be done for each vertex and we only need to do it
+            // once here
+            glm::mat3 normalMatrix{glm::mat3(glm::transpose(glm::inverse(model)))};
+            geometryShader.setMatrix3("normalMatrix", normalMatrix);
+
+            obj.draw(geometryShader);
+        }
+
         
 
         // this will swap the color buffer that is used to render 
@@ -348,13 +354,8 @@ int main(int numArgs, char *args[])
         // thi checks if any events are triggered (like keyboard/mouse)
         glfwPollEvents();
     }
-
-
-        
     // clean up/delete GLFW's resources that were allocated
     glfwTerminate();
-    
-    
     return 0;
 }
 
@@ -366,19 +367,13 @@ void processInput(GLFWwindow *window, ShaderProgram &program)
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    // if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-    //     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    // }
-    else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE){
+    if((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)){
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE){
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
     program.use();
-    if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-        program.setBool("flip", 1); 
-    }
-    else if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE){
-        program.setBool("flip", 0); 
-    }
 
     // navigate with esdf
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
@@ -401,11 +396,10 @@ void processInput(GLFWwindow *window, ShaderProgram &program)
         cam.incrementDirection(Camera::CameraDirection::DOWN, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
         cam.incrementDirection(Camera::CameraDirection::UP, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-        cam.incrementDirection(Camera::CameraDirection::LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) 
+        cam.incrementDirection(Camera::CameraDirection::LEFT, deltaTime); 
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) 
         cam.incrementDirection(Camera::CameraDirection::RIGHT, deltaTime);
-
     // roll with uo
     
     if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
