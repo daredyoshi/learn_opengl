@@ -23,6 +23,7 @@
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "Material.h"
 
 
 
@@ -157,7 +158,10 @@ int main(int numArgs, char *args[])
         glm::vec4( 1.5f,  0.2f, -1.5f , 1.0f), 
         glm::vec4(-1.3f,  1.0f, -1.5f , 1.0f)  
     }; 
+
+
     glEnable(GL_DEPTH_TEST);
+
 
     // double textureScale{ 1.0f};
     double textureOpacity{ 1.0f };
